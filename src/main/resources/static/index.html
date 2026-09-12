@@ -3,65 +3,151 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Music Player</title>
+    <title>Resonance — Music Player</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
     <div class="app">
         <aside class="sidebar">
-            <h1 class="logo">&#127925; Music Player</h1>
+            <div class="brand">
+                <div class="brand-mark">R</div>
+                <div class="brand-name">Resonance</div>
+            </div>
 
-            <section class="panel">
-                <h2>Upload a Song</h2>
-                <form id="upload-form">
-                    <input type="file" id="file-input" accept="audio/*" required />
-                    <input type="text" id="title-input" placeholder="Title" />
-                    <input type="text" id="artist-input" placeholder="Artist" />
-                    <input type="text" id="album-input" placeholder="Album" />
-                    <input type="text" id="genre-input" placeholder="Genre" />
-                    <button type="submit">Upload</button>
-                    <div id="upload-status" class="status"></div>
-                </form>
-            </section>
+            <div id="auth-area" class="auth-area">
+                <button id="login-open-btn" class="btn btn-ghost btn-block">Log in</button>
+                <button id="register-open-btn" class="btn btn-primary btn-block">Sign up</button>
+            </div>
 
-            <section class="panel">
-                <h2>Playlists</h2>
-                <form id="playlist-form">
+            <div id="user-area" class="user-area hidden">
+                <div class="user-chip">
+                    <div class="avatar" id="user-avatar">?</div>
+                    <div class="user-name" id="user-name-label">—</div>
+                </div>
+                <button id="logout-btn" class="btn btn-ghost btn-block btn-sm">Log out</button>
+            </div>
+
+            <nav class="nav">
+                <button class="nav-item active" data-view="library">
+                    <span class="nav-icon">&#9835;</span> Library
+                </button>
+                <button class="nav-item" data-view="playlists">
+                    <span class="nav-icon">&#9776;</span> Playlists
+                </button>
+                <button class="nav-item" data-view="upload">
+                    <span class="nav-icon">&#8593;</span> Upload
+                </button>
+            </nav>
+
+            <section id="playlist-panel" class="panel">
+                <div class="panel-header">
+                    <h2>Your Playlists</h2>
+                </div>
+                <form id="playlist-form" class="inline-form">
                     <input type="text" id="playlist-name-input" placeholder="New playlist name" required />
-                    <button type="submit">Create</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Add</button>
                 </form>
                 <ul id="playlist-list" class="list"></ul>
             </section>
         </aside>
 
         <main class="main">
-            <div class="toolbar">
-                <input type="text" id="search-input" placeholder="Search by title, artist or album..." />
-                <button id="search-clear">Clear</button>
-            </div>
+            <header class="topbar">
+                <div class="search-wrap">
+                    <span class="search-icon">&#128269;</span>
+                    <input type="text" id="search-input" placeholder="Search songs, artists, albums..." />
+                    <button id="search-clear" class="btn-icon hidden" title="Clear">&times;</button>
+                </div>
+                <button id="ai-toggle-btn" class="btn btn-accent">
+                    <span class="ai-dot"></span> Ask the AI DJ
+                </button>
+            </header>
 
-            <section>
-                <h2 id="song-list-title">All Songs</h2>
-                <ul id="song-list" class="list song-list"></ul>
+            <section id="upload-view" class="view hidden">
+                <div class="card upload-card">
+                    <h2>Upload a Track</h2>
+                    <p class="muted">Add a song to the shared library. Log in first to upload.</p>
+                    <form id="upload-form" class="upload-form">
+                        <label class="file-drop" for="file-input">
+                            <span id="file-drop-label">Click to choose an audio file</span>
+                        </label>
+                        <input type="file" id="file-input" accept="audio/*" required hidden />
+                        <div class="form-grid">
+                            <input type="text" id="title-input" placeholder="Title" />
+                            <input type="text" id="artist-input" placeholder="Artist" />
+                            <input type="text" id="album-input" placeholder="Album" />
+                            <input type="text" id="genre-input" placeholder="Genre" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload Track</button>
+                        <div id="upload-status" class="status"></div>
+                    </form>
+                </div>
             </section>
 
-            <section id="active-playlist-section" class="hidden">
-                <h2 id="active-playlist-title">Playlist</h2>
-                <ul id="active-playlist-songs" class="list song-list"></ul>
+            <section id="library-view" class="view">
+                <div class="view-header">
+                    <h1 id="song-list-title">All Songs</h1>
+                    <span class="count-pill" id="song-count-pill">0 tracks</span>
+                </div>
+                <ul id="song-list" class="track-list"></ul>
+            </section>
+
+            <section id="playlists-view" class="view hidden">
+                <div class="view-header">
+                    <h1 id="active-playlist-title">Select a playlist</h1>
+                </div>
+                <ul id="active-playlist-songs" class="track-list"></ul>
             </section>
         </main>
+
+        <aside id="ai-panel" class="ai-panel hidden">
+            <div class="ai-panel-header">
+                <h2>AI DJ</h2>
+                <button id="ai-close-btn" class="btn-icon">&times;</button>
+            </div>
+            <p class="muted ai-subtitle">Describe a mood, activity, or vibe — the assistant will pick tracks from your library.</p>
+            <div id="ai-messages" class="ai-messages"></div>
+            <form id="ai-form" class="ai-form">
+                <input type="text" id="ai-input" placeholder="e.g. something chill for studying" />
+                <button type="submit" class="btn btn-accent btn-sm">Ask</button>
+            </form>
+        </aside>
+    </div>
+
+    <div id="auth-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <button id="modal-close-btn" class="btn-icon modal-close">&times;</button>
+            <h2 id="modal-title">Log in</h2>
+            <form id="auth-form" class="auth-form">
+                <input type="text" id="auth-username" placeholder="Username" required autocomplete="username" />
+                <input type="email" id="auth-email" placeholder="Email (sign up only)" autocomplete="email" />
+                <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password" />
+                <button type="submit" class="btn btn-primary btn-block" id="auth-submit-btn">Log in</button>
+                <div id="auth-status" class="status"></div>
+            </form>
+            <p class="switch-mode">
+                <span id="switch-mode-text">Don't have an account?</span>
+                <a href="#" id="switch-mode-link">Sign up</a>
+            </p>
+        </div>
     </div>
 
     <footer class="player-bar">
         <div class="now-playing">
-            <div class="track-title" id="now-playing-title">Nothing playing</div>
-            <div class="track-artist" id="now-playing-artist"></div>
+            <div class="now-art">&#9835;</div>
+            <div class="now-meta">
+                <div class="track-title" id="now-playing-title">Nothing playing</div>
+                <div class="track-artist" id="now-playing-artist">Pick a track to start</div>
+            </div>
         </div>
 
         <div class="controls">
-            <button id="prev-btn" title="Previous">&#9198;</button>
-            <button id="play-btn" title="Play/Pause">&#9658;</button>
-            <button id="next-btn" title="Next">&#9197;</button>
+            <button id="prev-btn" class="btn-icon" title="Previous">&#9198;</button>
+            <button id="play-btn" class="btn-icon btn-play" title="Play/Pause">&#9658;</button>
+            <button id="next-btn" class="btn-icon" title="Next">&#9197;</button>
         </div>
 
         <div class="progress-wrap">
