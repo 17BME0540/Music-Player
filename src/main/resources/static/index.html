@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Player</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <h1 class="logo">&#127925; Music Player</h1>
+
+            <section class="panel">
+                <h2>Upload a Song</h2>
+                <form id="upload-form">
+                    <input type="file" id="file-input" accept="audio/*" required />
+                    <input type="text" id="title-input" placeholder="Title" />
+                    <input type="text" id="artist-input" placeholder="Artist" />
+                    <input type="text" id="album-input" placeholder="Album" />
+                    <input type="text" id="genre-input" placeholder="Genre" />
+                    <button type="submit">Upload</button>
+                    <div id="upload-status" class="status"></div>
+                </form>
+            </section>
+
+            <section class="panel">
+                <h2>Playlists</h2>
+                <form id="playlist-form">
+                    <input type="text" id="playlist-name-input" placeholder="New playlist name" required />
+                    <button type="submit">Create</button>
+                </form>
+                <ul id="playlist-list" class="list"></ul>
+            </section>
+        </aside>
+
+        <main class="main">
+            <div class="toolbar">
+                <input type="text" id="search-input" placeholder="Search by title, artist or album..." />
+                <button id="search-clear">Clear</button>
+            </div>
+
+            <section>
+                <h2 id="song-list-title">All Songs</h2>
+                <ul id="song-list" class="list song-list"></ul>
+            </section>
+
+            <section id="active-playlist-section" class="hidden">
+                <h2 id="active-playlist-title">Playlist</h2>
+                <ul id="active-playlist-songs" class="list song-list"></ul>
+            </section>
+        </main>
+    </div>
+
+    <footer class="player-bar">
+        <div class="now-playing">
+            <div class="track-title" id="now-playing-title">Nothing playing</div>
+            <div class="track-artist" id="now-playing-artist"></div>
+        </div>
+
+        <div class="controls">
+            <button id="prev-btn" title="Previous">&#9198;</button>
+            <button id="play-btn" title="Play/Pause">&#9658;</button>
+            <button id="next-btn" title="Next">&#9197;</button>
+        </div>
+
+        <div class="progress-wrap">
+            <span id="current-time">0:00</span>
+            <input type="range" id="seek-bar" value="0" min="0" max="100" step="0.1" />
+            <span id="duration-time">0:00</span>
+        </div>
+
+        <div class="volume-wrap">
+            <span>&#128266;</span>
+            <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" />
+        </div>
+    </footer>
+
+    <audio id="audio-el" preload="metadata"></audio>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
